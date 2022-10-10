@@ -1,24 +1,21 @@
-import { createBrowserHistory } from 'history';
 import { render } from '@testing-library/react';
-import React from 'react';
-import { Router } from 'react-router-dom';
-import App from '../../App';
-import stateGlobalContext from '../../context/stateGlobalContext';
-import StateGlobalProvider from '../../context/StateGlobalProvider';
+import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
 
-export const renderPath = (path) => {
-  console.log(path);
-  console.log('path');
-  const history = createBrowserHistory();
-  history.push(path);
-  const { ...resources } = render(
-    <StateGlobalProvider value={ stateGlobalContext }>
-      <Router history={ history }>
-        <App />
-      </Router>
-    </StateGlobalProvider>,
-  );
-  return { ...resources, history, stateGlobalContext };
+export const renderWithRouter = (
+  ui,
+  {
+    route = '/',
+    history = createMemoryHistory({ initialEntries: [route] }),
+  } = {},
+) => {
+  window.history.pushState({}, 'Test page', route);
+  return {
+    user: userEvent,
+    ...render(ui, { wrapper: BrowserRouter }),
+    history,
+  };
 };
 
 export const EMAIL_INPUT = 'common_login__input-email';
