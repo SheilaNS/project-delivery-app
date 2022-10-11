@@ -7,10 +7,8 @@ const fetchLogin = {
     });
     try {
       const result = await instance.post('/login', obj);
-      console.log(result);
       return result;
     } catch (error) {
-      console.log(error);
       return error.response;
     }
   },
