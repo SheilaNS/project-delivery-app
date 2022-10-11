@@ -1,15 +1,19 @@
 import axios from 'axios';
 
-async function fetchLogin(obj) {
-  const instance = axios.create({
-    baseURL: 'http://localhost:3001',
-  });
-  try {
-    const result = await instance.post('/login', obj);
-    return result;
-  } catch (error) {
-    return error.response;
-  }
-}
+const fetchLogin = {
+  post: async (obj) => {
+    const instance = axios.create({
+      baseURL: 'http://localhost:3001',
+    });
+    try {
+      const result = await instance.post('/login', obj);
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return error.response;
+    }
+  },
+};
 
 export default fetchLogin;

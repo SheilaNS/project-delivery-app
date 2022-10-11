@@ -1,20 +1,25 @@
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import StateGlobalProvider from '../../context/StateGlobalProvider';
 
 export const renderWithRouter = (
   ui,
-  {
-    route = '/',
-    history = createMemoryHistory({ initialEntries: [route] }),
-  } = {},
+  route = '/',
+  renderOptions = {},
 ) => {
-  window.history.pushState({}, 'Test page', route);
+  const history = createMemoryHistory();
+
+  const wrapper = ({ children }) => (
+    <MemoryRouter history={ history } initialEntries={ [route] }>
+      <StateGlobalProvider>
+        {children}
+      </StateGlobalProvider>
+    </MemoryRouter>
+  );
   return {
-    user: userEvent,
-    ...render(ui, { wrapper: BrowserRouter }),
-    history,
+    ...history,
+    ...render(ui, { wrapper, ...renderOptions }),
   };
 };
 
