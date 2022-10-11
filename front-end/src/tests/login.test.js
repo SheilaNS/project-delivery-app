@@ -5,21 +5,8 @@ import * as ReactRouter from 'react-router';
 import fetchLogin from '../api/fetchLogin';
 import App from '../App';
 import Login from '../pages/login';
-import {
-  EMAIL_INPUT,
-  LOGIN_BTN,
-  PASS_INPUT,
-  REGISTER_BTN,
-  ZE_EMAIL,
-  ZE_PASS,
-  renderWithRouter,
-  ERROR_LOGIN,
-  FULANA_EMAIL,
-  FULANA_PASS,
-  ADM_EMAIL,
-  ADM_PASS,
-} from './helpers';
-import { LOGIN_ADM, LOGIN_CUSTOMER, LOGIN_SELLER, WRONG_LOGIN } from './mocks';
+import * as help from './helpers';
+import * as data from './mocks';
 
 const navigate = jest.fn();
 
@@ -32,77 +19,77 @@ describe('Login', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('Os componentes estão na tela', () => {
-    renderWithRouter(<App />, { route: '/login' });
-    expect(screen.getByTestId(EMAIL_INPUT)).toBeInTheDocument();
-    expect(screen.getByTestId(PASS_INPUT)).toBeInTheDocument();
-    expect(screen.getByTestId(LOGIN_BTN)).toBeInTheDocument();
-    expect(screen.getByTestId(REGISTER_BTN)).toBeInTheDocument();
+    help.renderWithRouter(<App />, { route: '/login' });
+    expect(screen.getByTestId(help.EMAIL_INPUT)).toBeInTheDocument();
+    expect(screen.getByTestId(help.PASS_INPUT)).toBeInTheDocument();
+    expect(screen.getByTestId(help.LOGIN_BTN)).toBeInTheDocument();
+    expect(screen.getByTestId(help.REGISTER_BTN)).toBeInTheDocument();
   });
 
   it('Muda para a tela de produtos quando o login de um consumidor é feito com sucesso', async () => {
-    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (LOGIN_CUSTOMER))
+    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (data.LOGIN_CUSTOMER))
     
-    renderWithRouter(<Login />);
+    help.renderWithRouter(<Login />);
 
-    userEvent.type(screen.getByTestId(EMAIL_INPUT), ZE_EMAIL);
-    userEvent.type(screen.getByTestId(PASS_INPUT), ZE_PASS);
-    userEvent.click(screen.getByTestId(LOGIN_BTN));
+    userEvent.type(screen.getByTestId(help.EMAIL_INPUT), help.ZE_EMAIL);
+    userEvent.type(screen.getByTestId(help.PASS_INPUT), help.ZE_PASS);
+    userEvent.click(screen.getByTestId(help.LOGIN_BTN));
 
-    expect(screen.getByTestId(EMAIL_INPUT)).toHaveValue(ZE_EMAIL);
-    expect(screen.getByTestId(LOGIN_BTN)).not.toBeDisabled();
+    expect(screen.getByTestId(help.EMAIL_INPUT)).toHaveValue(help.ZE_EMAIL);
+    expect(screen.getByTestId(help.LOGIN_BTN)).not.toBeDisabled();
 
     await waitFor(() => expect(navigate).toBeCalledWith('/customer/products')); 
   });
 
   it('Muda para a tela de pedidos quando o login de um vendedor é feito com sucesso', async () => {
-    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (LOGIN_SELLER))
+    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (data.LOGIN_SELLER))
     
-    renderWithRouter(<Login />);
+    help.renderWithRouter(<Login />);
 
-    userEvent.type(screen.getByTestId(EMAIL_INPUT), FULANA_EMAIL);
-    userEvent.type(screen.getByTestId(PASS_INPUT), FULANA_PASS);
-    userEvent.click(screen.getByTestId(LOGIN_BTN));
+    userEvent.type(screen.getByTestId(help.EMAIL_INPUT), help.FULANA_EMAIL);
+    userEvent.type(screen.getByTestId(help.PASS_INPUT), help.FULANA_PASS);
+    userEvent.click(screen.getByTestId(help.LOGIN_BTN));
 
-    expect(screen.getByTestId(EMAIL_INPUT)).toHaveValue(FULANA_EMAIL);
-    expect(screen.getByTestId(LOGIN_BTN)).not.toBeDisabled();
+    expect(screen.getByTestId(help.EMAIL_INPUT)).toHaveValue(help.FULANA_EMAIL);
+    expect(screen.getByTestId(help.LOGIN_BTN)).not.toBeDisabled();
 
     await waitFor(() => expect(navigate).toBeCalledWith('/seller/orders')); 
   });
 
   it('Muda para a tela de gerente quando o login de um admnistrador é feito com sucesso', async () => {
-    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (LOGIN_ADM))
+    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (data.LOGIN_ADM))
     
-    renderWithRouter(<Login />);
+    help.renderWithRouter(<Login />);
 
-    userEvent.type(screen.getByTestId(EMAIL_INPUT), ADM_EMAIL);
-    userEvent.type(screen.getByTestId(PASS_INPUT), ADM_PASS);
-    userEvent.click(screen.getByTestId(LOGIN_BTN));
+    userEvent.type(screen.getByTestId(help.EMAIL_INPUT), help.ADM_EMAIL);
+    userEvent.type(screen.getByTestId(help.PASS_INPUT), help.ADM_PASS);
+    userEvent.click(screen.getByTestId(help.LOGIN_BTN));
 
-    expect(screen.getByTestId(EMAIL_INPUT)).toHaveValue(ADM_EMAIL);
-    expect(screen.getByTestId(LOGIN_BTN)).not.toBeDisabled();
+    expect(screen.getByTestId(help.EMAIL_INPUT)).toHaveValue(help.ADM_EMAIL);
+    expect(screen.getByTestId(help.LOGIN_BTN)).not.toBeDisabled();
 
     await waitFor(() => expect(navigate).toBeCalledWith('/admin/manage')); 
   });
 
   it('Muda para a tela de registro quando o usuário deseja se cadastrar', async () => {    
-    renderWithRouter(<Login />);
+    help.renderWithRouter(<Login />);
 
-    userEvent.click(screen.getByTestId(REGISTER_BTN));
+    userEvent.click(screen.getByTestId(help.REGISTER_BTN));
 
-    expect(screen.getByTestId(LOGIN_BTN)).toBeDisabled();
+    expect(screen.getByTestId(help.LOGIN_BTN)).toBeDisabled();
 
     await waitFor(() => expect(navigate).toBeCalledWith('/register')); 
   });
 
-  it('Should display error message if the login is not successful', async () => {
-    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (WRONG_LOGIN));
+  it('O elemento de erro aparece na tela ao tentar fazer login com um e-mail e senha inválidos', async () => {
+    jest.spyOn(fetchLogin, 'post').mockImplementation(() => (data.WRONG_LOGIN));
 
-    renderWithRouter(<Login />);
+    help.renderWithRouter(<Login />);
 
-    userEvent.type(screen.getByTestId(EMAIL_INPUT), 'batatinha@gmail.com');
-    userEvent.type(screen.getByTestId(PASS_INPUT), '123456');
-    userEvent.click(screen.getByTestId(LOGIN_BTN));
+    userEvent.type(screen.getByTestId(help.EMAIL_INPUT), 'batatinha@gmail.com');
+    userEvent.type(screen.getByTestId(help.PASS_INPUT), '123456');
+    userEvent.click(screen.getByTestId(help.LOGIN_BTN));
 
-    await waitFor(() => expect(screen.getByTestId(ERROR_LOGIN)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByTestId(help.ERROR_LOGIN)).toBeInTheDocument());
   });
 });

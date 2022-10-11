@@ -1,4 +1,4 @@
-import { ADM_EMAIL, FULANA_EMAIL, ZE_EMAIL } from '../helpers';
+import { ADM_EMAIL, FULANA_EMAIL, NEW_EMAIL, ZE_EMAIL } from '../helpers';
 
 // LOGIN
 export const LOGIN_CUSTOMER = {
@@ -31,9 +31,26 @@ export const LOGIN_ADM = {
   },
 };
 
+export const NEW_USER = {
+  status: 200,
+  data: {
+    name: 'Fulana dos Santos',
+    email: NEW_EMAIL,
+    role: 'customer',
+    token: 'any',
+  },
+};
+
 export const WRONG_LOGIN = {
   status: 404,
   data: {
     message: 'User not found',
+  },
+};
+
+export const WRONG_REG = {
+  status: 409,
+  data: {
+    message: 'Register Error',
   },
 };

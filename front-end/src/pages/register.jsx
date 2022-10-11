@@ -34,7 +34,7 @@ function Register() {
   };
   const handleClick = async (e) => {
     e.preventDefault();
-    const result = await fetchCreateUser({ name, email, password });
+    const result = await fetchCreateUser.post({ name, email, password });
     const STATUS_NUMBER = 409;
     if (result.status === STATUS_NUMBER) {
       setExistingUser(true);
